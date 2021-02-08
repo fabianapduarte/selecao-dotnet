@@ -1,43 +1,51 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Api.Data;
+using Microsoft.AspNetCore.Authorization;
+
 using Api.Models;
+using Api.Services;
+using Api.Repositories;
 
 namespace Api.Controllers
 {
   [ApiController]
-  [Route("user")]
   public class UserController : ControllerBase
   {
-    [HttpGet]
-    [Route("{id:int}")]
-    public async Task<ActionResult<User>> GetById(
-      [FromServices] DataContext context, 
-      int id)
+    [HttpPost]
+    [Route("login")]
+    [AllowAnonymous]
+    public async Task<ActionResult<dynamic>> Authenticate(
+      [FromServices] AuthenticationService auth,
+      [FromServices] TokenService token,
+      [FromBody] User userLogin)
     {
-      var user = await context.User.FindAsync(id);
+      var user = auth.Get(userLogin.Email, userLogin.Password);
 
       if (user == null)
       {
-        return NotFound();
+        return NotFound(new { message = "Email ou senha inválidos" });
       }
 
-      return user;
+      var t = token.GenerateToken(user);
+      user.Password = "";
+
+      return new
+      {
+        user = user,
+        token = t
+      };
     }
 
     [HttpPost]
+    [AllowAnonymous]
     [Route("register")]
     public async Task<ActionResult<User>> Post(
-      [FromServices] DataContext context,
+      [FromServices] UserRepository context,
       [FromBody] User model)
     {
       if (ModelState.IsValid) 
       {
-        context.User.Add(model);
-        await context.SaveChangesAsync();
-        return model;
+        return await context.Add(model);
       }
       else
       {
