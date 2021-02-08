@@ -1,11 +1,11 @@
 using System;
 using System.Text;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 using Api.Models;
 using Api.Data;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services
 {
@@ -20,7 +20,9 @@ namespace Api.Services
 
     public User Get(string email, string password)
     {
-      return this.data.User.Where(x => x.Email == email && x.Password == password).FirstOrDefault();
+      return this.data.User
+        .Where(x => x.Email == email && x.Password == password)
+        .FirstOrDefault();
     }
   }
 }

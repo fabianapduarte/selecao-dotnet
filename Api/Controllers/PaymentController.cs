@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 using Api.Data;
 using Api.Models;
 
@@ -36,13 +35,5 @@ namespace Api.Controllers
         return Ok(false);
       }
     }
-
-    /*[HttpPost]
-    [Route("confirmpayment")]
-    public async Task<ActionResult<Payment>> ConfirmPayment(
-      [FromServices] DataContext context)
-    {
-
-    }*/
   }
 }
