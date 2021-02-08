@@ -30,6 +30,8 @@ namespace Api
             services.AddScoped<DataContext, DataContext>();
 
             services.AddScoped<UserRepository, UserRepository>();
+            services.AddScoped<CourseRepository, CourseRepository>();
+
             services.AddScoped<AuthenticationService, AuthenticationService>();
             services.AddScoped<TokenService, TokenService>();
 

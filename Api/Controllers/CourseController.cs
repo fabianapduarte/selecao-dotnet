@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Api.Data;
+using Microsoft.AspNetCore.Authorization;
+
 using Api.Models;
+using Api.Repositories;
 
 namespace Api.Controllers
 {
@@ -12,30 +14,13 @@ namespace Api.Controllers
   public class CourseController : Controller
   {
     [HttpGet]
-    [Route("")]
-    public async Task<ActionResult<List<Course>>> Get([FromServices] DataContext context)
+    [Authorize]
+    [Route("list-all")]
+    public async Task<ActionResult<List<Course>>> Get([FromServices] CourseRepository repository)
     {
-      var courses = await context.Course.ToListAsync();
+      var courses = await repository.Get().Course.ToListAsync();
       
       return Ok(courses);
-    }
-
-    [HttpPost]
-    [Route("create")]
-    public async Task<ActionResult<Course>> Post(
-      [FromServices] DataContext context,
-      [FromBody] Course model)
-    {
-      if (ModelState.IsValid) 
-      {
-        context.Course.Add(model);
-        await context.SaveChangesAsync();
-        return model;
-      }
-      else
-      {
-        return BadRequest(ModelState);
-      }
     }
   }
 }
