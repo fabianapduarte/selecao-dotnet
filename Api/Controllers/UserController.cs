@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 using Api.Models;
 using Api.Services;
@@ -45,12 +47,32 @@ namespace Api.Controllers
     {
       if (ModelState.IsValid) 
       {
-        return await context.Add(model);
+        if (!context.VerifyIfUserExists(model.Email))
+        {
+          return await context.Add(model);
+        }
+        else
+        {
+          return BadRequest(new { message = "Um usuário com o e-mail digitado já existe." });
+        }
       }
       else
       {
         return BadRequest(ModelState);
       }
+    }
+
+    [HttpGet]
+    [Route("list-users")]
+    public async Task<ActionResult<List<User>>> Get([FromServices] UserRepository repository)
+    {
+      var users = await repository.Get().User.ToListAsync();
+      users.ForEach(user => {
+        user.CreditCard = "";
+        user.Password = "";
+      });
+    
+      return Ok(users);
     }
   }
 }

@@ -15,5 +15,15 @@ namespace Api.Data
     public DbSet<Course> Course { get; set; }
     public DbSet<Payment> Payment { get; set; }
     public DbSet<CourseRegistration> CourseRegistration { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<User>()
+        .Property(user => user.Id)
+        .ValueGeneratedOnAdd();
+        
+      modelBuilder.Entity<User>()
+        .HasKey(user => new { user.Id, user.Email });
+    }
   }
 }

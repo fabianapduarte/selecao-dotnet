@@ -4,13 +4,9 @@ namespace Api.Models
 {
   public class User
   {
-    [Key]
     public int Id { get; set; }
 
     public string Name { get; set; }
-
-    [StringLength(11, ErrorMessage = "O campo de CPF tem que ter 11 caracteres")]
-    public string Cpf { get; set; }
 
     [EmailAddress]
     [Required(ErrorMessage = "Este campo é obrigatório")]
