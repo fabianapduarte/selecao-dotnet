@@ -22,5 +22,17 @@ namespace Api.Controllers
       
       return Ok(courses);
     }
+
+    [HttpGet]
+    [Authorize]
+    [Route("{id:int}")]
+    public async Task<ActionResult<Course>> GetById(
+      [FromServices] CourseRepository repository,
+      int id)
+    {
+      var course = await repository.Get().Course.FirstOrDefaultAsync(x => x.Id == id);
+
+      return Ok(course);
+    }
   }
 }
