@@ -21,9 +21,9 @@ namespace Api.Data
       modelBuilder.Entity<User>()
         .Property(user => user.Id)
         .ValueGeneratedOnAdd();
-        
-      modelBuilder.Entity<User>()
-        .HasKey(user => new { user.Id, user.Email });
+
+      modelBuilder.Entity<Payment>()
+        .HasKey(p => new { p.UserFK, p.CourseFK });
     }
   }
 }

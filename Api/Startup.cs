@@ -27,10 +27,12 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("Database"));
+
             services.AddScoped<DataContext, DataContext>();
 
             services.AddScoped<UserRepository, UserRepository>();
             services.AddScoped<CourseRepository, CourseRepository>();
+            services.AddScoped<PaymentRepository, PaymentRepository>();
 
             services.AddScoped<AuthenticationService, AuthenticationService>();
             services.AddScoped<TokenService, TokenService>();
