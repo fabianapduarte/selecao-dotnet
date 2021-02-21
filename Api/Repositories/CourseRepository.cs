@@ -1,19 +1,12 @@
-using System.Threading.Tasks;
-
 using Api.Models;
 using Api.Data;
-using System.Linq;
 
 namespace Api.Repositories
 {
-  public class CourseRepository
+  public class CourseRepository : BaseRepository
   {
-    protected DataContext context;
-
-    public CourseRepository(DataContext context)
+    public CourseRepository(DataContext context) : base(context)
     {
-      this.context = context;
-
       this.context.Course.Add(new Course{
         Id = 1,
         Title = "Curso JavaScript",
@@ -36,11 +29,6 @@ namespace Api.Repositories
       });
 
       this.context.SaveChanges();
-    }
-
-    public DataContext Get()
-    {
-      return this.context;
     }
   }
 }

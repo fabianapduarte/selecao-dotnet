@@ -6,13 +6,10 @@ using Api.Data;
 
 namespace Api.Repositories
 {
-  public class UserRepository
+  public class UserRepository : BaseRepository
   {
-    protected DataContext context;
-
-    public UserRepository(DataContext context)
+    public UserRepository(DataContext context) : base(context)
     {
-      this.context = context;
     }
 
     public async Task<User> Add(User user)
@@ -39,11 +36,6 @@ namespace Api.Repositories
       {
         return false;
       }
-    }
-
-    public DataContext Get()
-    {
-      return this.context;
     }
   }
 }
