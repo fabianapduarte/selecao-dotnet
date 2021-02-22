@@ -38,43 +38,47 @@ namespace Api.Controllers
       }
     }
 
-    /*[HttpGet]
+    [HttpGet]
     [Authorize]
-    [Route("list-payments")]
+    [Route("payment-register/{idCourse:int}")]
     public async Task<ActionResult<dynamic>> ListPayments(
       [FromHeader] int idUser,
+      int idCourse,
       [FromServices] PaymentRepository context
     )
     {
-      var payments = await context.Get().Payment
-        .Where(x => x.UserFK == idUser)
-        .ToListAsync();
-
-      return Ok(payments);
-    }*/
-
-    [HttpGet]
-    [Authorize]
-    [Route("")]
-    public async Task<ActionResult<Payment>> VerifyPayment(
-      [FromServices] PaymentRepository context,
-      [FromHeader] int idUser,
-      int idCourse)
-    {
-      var payment = await context.Get().Payment.FindAsync(idUser, idCourse);
+      var payment = await context.Get().Payment.FindAsync(idUser, idUser);
 
       if (payment == null)
       {
-        return NotFound();
+        return NotFound(new { message = "Você ainda não se inscreveu nesse curso." });
       }
 
-      if (payment.PaymentsReceived > 0)
+      return Ok(payment);
+    }
+
+    [HttpPut]
+    [Authorize]
+    [Route("make-payment")]
+    public async Task<ActionResult<dynamic>> MakePayment(
+      [FromServices] PaymentRepository context,
+      [FromBody] Payment paymentData)
+    {
+      var payment = await context.VerifyPayments(paymentData.UserFK, paymentData.CourseFK);
+
+      if (payment == null)
       {
-        return Ok(true);
+        return NotFound(new { message = "Você ainda não se inscreveu nesse curso." });
+      }
+
+      if (payment.PaymentsReceived < payment.TotalPayments)
+      {
+        await context.Pay(paymentData.UserFK, paymentData.CourseFK);
+        return Ok(new { message = "Pagamento realizado com sucesso" });
       }
       else
       {
-        return Ok(false);
+        return BadRequest(new { message = "Não há mais pagamentos a serem realizados" });
       }
     }
   }
