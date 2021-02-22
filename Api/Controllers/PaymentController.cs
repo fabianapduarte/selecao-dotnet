@@ -47,7 +47,7 @@ namespace Api.Controllers
       [FromServices] PaymentRepository context
     )
     {
-      var payment = await context.Get().Payment.FindAsync(idUser, idUser);
+      var payment = await context.Get().Payment.FindAsync(idUser, idCourse);
 
       if (payment == null)
       {

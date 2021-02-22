@@ -33,6 +33,7 @@ namespace Api
             services.AddScoped<UserRepository, UserRepository>();
             services.AddScoped<CourseRepository, CourseRepository>();
             services.AddScoped<PaymentRepository, PaymentRepository>();
+            services.AddScoped<CourseRegistrationRepository, CourseRegistrationRepository>();
 
             services.AddScoped<AuthenticationService, AuthenticationService>();
             services.AddScoped<TokenService, TokenService>();
